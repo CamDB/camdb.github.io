@@ -1,10 +1,21 @@
 use std::{fs::{self, File}, io::{BufWriter, Write}, path::Path, sync::mpsc, thread, time::{Duration, Instant}};
+use lazy_static::lazy_static;
 
 use anyhow::Result;
 use notify::{RecursiveMode, Watcher};
 
 mod posts;
 mod templating;
+
+lazy_static! {
+    pub static ref OUTPUT_PATH: String = {
+        if cfg!(debug_assertions) {
+            "debug".to_string()
+        } else {
+            "docs".to_string()
+        }
+    };
+}
 
 fn main() -> Result<()> {
     env_logger::init();
@@ -43,13 +54,19 @@ fn main() -> Result<()> {
 fn recompile_html() -> Result<()> {
     log::info!("Recompiling html...");
 
+    const OUTPUT_FOLDER: &str = if cfg!(debug_assertions) {
+        "debug"
+    } else {
+        "docs"
+    };
+
     // Fetch all posts from the posts dir.
     let posts = posts::get_all_posts(Path::new("./posts"))?;
 
     log::info!("Got {} post(s)", posts.len());
 
     // Clean existing output folder.
-    fs::remove_dir_all("docs/").ok();
+    fs::remove_dir_all(&format!("{}/", OUTPUT_FOLDER)).ok();
 
     // Generate the homepage.
 
@@ -57,7 +74,7 @@ fn recompile_html() -> Result<()> {
     for post in posts {
         let post_html = templating::post_page(&post)?;
 
-        let output_path = format!("docs/post/{}.html", post.metadata.normalised_title);
+        let output_path = format!("{}/post/{}.html", OUTPUT_FOLDER, post.metadata.normalised_title);
         let output_path = Path::new(&output_path);
 
         fs::create_dir_all(&output_path.parent().unwrap())?;
