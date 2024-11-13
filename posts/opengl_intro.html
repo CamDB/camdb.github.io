@@ -1,5 +1,9 @@
 <metadata>
     <title>OpenGL - Introduction</title>
+    <series>
+        <name>modern_opengl</name>
+        <entry>1</entry>
+    </series>
     <tags>
         <tag>
             General
@@ -8,19 +12,21 @@
 </metadata>
 
 <contents>
-    <h1 class="chapter">Modern OpenGL - Chapter 1</h1>
+<h1 class="chapter">Modern OpenGL - Chapter 1</h1>
     <h1>Introduction</h1>
 
     <h2>Preface</h2>
 
     <p>
-        The intent of this series is to mainly document my own learning process, and act as a reference in the future
+        The main intent of this series is to document my own learning process, and act as a reference in the future, 
         when I inevitably forget about everything.
         <span class="margin-number"></span>
     </p>
 
     <aside>
-        If you're wondering why everything is slightly left of center, it's because I like to put figures and little notes like these in my margins! On a mobile device, it collapses into the main container (and isn't very useful).
+        If you're wondering why everything is slightly left of centre, it's because I like to put figures and little
+        notes like these in my margins! On a mobile device, it collapses into the main container (and isn't very
+        useful).
     </aside>
 
     <p>
@@ -35,13 +41,13 @@
         There are some extremely useful resources that lay out how to use the modern functions introduced in OpenGL 4.1
         and onwards, but most only cover small aspects of the overall package and don't tend to look at the overall
         architecture of an OpenGL renderer that utilises modern GPU architecture effectively. I've referenced these
-        sources extensively throughout my posts.
+        sources extensively throughout this series.
     </p>
 
     <p>
-        These posts are more of a narrative exploration of OpenGL 4.6, with the goal being a simple but optimised
-        rendering pipeline that avoids any OpenGL functions that have been replaced with more performant options in
-        recent extensions of the API. Each post focuses on a particular feature or concept, starting with the heavily
+        This series is more of a narrative exploration of OpenGL 4.6, with the goal being a simple but optimised
+        rendering pipeline that avoids any OpenGL functions that have been replaced with lower-level options in
+        recent versions of the API. Each post focuses on a particular feature or concept, starting with the heavily
         unoptimised naive approach, and then gradually iterating until we end up with something decent! I try to include
         benchmarks wherever possible, so that we can get an idea of how each change impacts our renderer.
     </p>
@@ -69,12 +75,15 @@
 
     <p>
         However, prior to the creation of Vulkan (which was essentially a direct successor to OpenGL), a lot of new
-        extensions were brought into OpenGL<span class="margin-number"></span>! These extensions didn't exactly give <i>perfect</i> control over the GPU,
-        but they did make it possible to use a lot of the same concepts that would be utilised later on in Vulkan.
+        extensions were brought into OpenGL<span class="margin-number"></span>! These extensions didn't exactly give
+        <i>perfect</i> control over the GPU, but they did make it possible to use a lot of the same concepts that would 
+        be utilised later on in Vulkan.
     </p>
 
     <aside>
-        The <a href="https://www.khronos.org/opengl/wiki/History_of_OpenGL#Summary_of_version_changes">OpenGL wiki</a> details the additions that each version of OpenGL brings into the core library. Most of the functions we'll be relying on were added somewhere between 4.1 and 4.6
+        The <a href="https://www.khronos.org/opengl/wiki/History_of_OpenGL#Summary_of_version_changes">OpenGL wiki</a>
+        details the additions that each version of OpenGL brings into the core library. Most of the functions we'll be
+        relying on were added somewhere between 4.1 and 4.6
     </aside>
 
     <p>
@@ -120,10 +129,10 @@
 
     <p>
         With Modern OpenGL, and some well-written utility code, we can manage to avoid a lot of these problems due to
-        the addition of <a href=""
-            http://www.opengl.org/registry/specs/ARB/direct_state_access.txt>ARB_direct_state_access</a> (Direct State
-        Access, or DSA).
+        the addition of <a href="http://www.opengl.org/registry/specs/ARB/direct_state_access.txt">ARB_direct_state_access</a> 
+        (Direct State Access, or DSA).
     </p>
+
     <p>
         Before DSA, we would have to <i>bind</i> a buffer to the global context as the <i>current</i> buffer then
         configuring it using commands that modify the <i>current</i> buffer. Instead, we create a <i>named</i> buffer
@@ -136,7 +145,7 @@
 
     <p>
         OpenGL has a lot of pitfalls due to backwards compatibility and general design issues that can't really be
-        resolved, but if you can avoid the cruft it can fairly performant and easy to use. In terms of hardware
+        resolved, but if you can avoid the cruft it can be fairly performant and easy to use. In terms of hardware
         compatibility, it supports an older set of GPUs (even with OpenGL 4.6) but has pretty limited support on macOS,
         as Apple stopped supporting OpenGL beyond 4.1.
         <span class="figure-number"></span>
@@ -190,7 +199,7 @@
                 </tr>
                 <tr>
                     <td>Driver Requirements</td>
-                    <td>Full OpenGL 4.6 capable drivers <b>(2017+)</b><br></td>
+                    <td>Full OpenGL 4.6 capable drivers <b>(2017+)</b></td>
                     <td>Vulkan 1.0+ capable drivers <b>(2016+)</b></td>
                 </tr>
             </tbody>
@@ -204,7 +213,7 @@
     </p>
 
     <p>
-        In the next post, we'll do some basic setup using Glutin + Winit (Rust equivalent of GLFW) and draw a triangle
-        using DSA.
+        In the next post, we'll do some basic context setup using Glutin + Winit (the Rust equivalent of GLFW) and draw
+        a triangle using DSA.
     </p>
 </contents>

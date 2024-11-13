@@ -22,7 +22,7 @@ lazy_static! {
         if cfg!(debug_assertions) {
             env::current_dir().unwrap().to_string_lossy().to_string()
         } else {
-            "/".to_string()
+            "".to_string()
         }
     };
 }

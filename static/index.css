@@ -1,6 +1,13 @@
-@import url(https://unpkg.com/sanitize.css);
+@import url(sanitize.min.css);
 
 :root {
+    /* Enable better text rendering on macOS/iOS */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Improve kerning - the spacing between characters */
+    text-rendering: optimizeLegibility;
+
     /* Base sizes following Tufte's scale */
     --font-micro: 0.75rem;     /* 12px - for labels, captions */
     --font-small: 0.875rem;    /* 14px - for sidenotes */
@@ -47,6 +54,11 @@ body {
     padding: 0;
 }
 
+h1, h2, h3 {
+    /* Even out line lengths in headings */
+    text-wrap: balance;
+}
+
 h1.chapter {
     font-size: var(--font-small);
     margin-top: 0;
@@ -80,9 +92,34 @@ h3 {
     font-weight: 400;
 }
 
-p {
+a {
+    /* Break URLs at sensible points */
+    word-break: break-word;
+    /* Override default underline for better readability */
+    text-decoration-thickness: from-font;
+    text-underline-offset: 0.2em;
+}
+
+::selection {
+    /* Improve visibility of selected text */
+    background-color: rgba(0, 100, 255, 0.15);
+    color: currentColor;
+}
+
+p, li, blockquote {
     margin-top: var(--space-base);
     margin-bottom: var(--space-base);
+
+    /* Break words at appropriate points */
+    overflow-wrap: break-word;
+    word-wrap: break-word; /* Legacy support */
+    
+    /* Enable hyphenation */
+    hyphens: auto;
+    
+    /* Prevent single words from being orphaned */
+    orphans: 3;
+    widows: 3;
 }
 
 main {
@@ -154,6 +191,8 @@ aside {
     font-size: var(--font-small);
     position: relative;
     color: #666;
+
+    user-select: none;
 }
 
 figure::before {
@@ -181,6 +220,7 @@ figure {
     font-size: var(--font-small);
     position: relative;
     color: #666;
+    user-select: none;
 }
 
 @media screen and (max-width: 1730px) {
@@ -225,6 +265,7 @@ table th {
     border-bottom: 1px solid #333;
     font-weight: 400;
     text-align: left;
+    background-color: #f8f9fa;
 }
 
 table td {
@@ -232,6 +273,10 @@ table td {
     border-bottom: 1px solid #ccc;
     vertical-align: top;
     word-wrap: break-word;
+}
+
+table tr:nth-child(even) {
+    background-color: #f8f9fa; /* Light gray for even rows */
 }
 
 /* Remove border from last row */
@@ -248,7 +293,7 @@ table td.numerical,
 /* Table caption styling */
 table caption {
     margin: 0.5rem 0 1.5rem;
-    font-size: 0.9em;
+    font-size: var(--font-small);
     color: #666;
 }
 
