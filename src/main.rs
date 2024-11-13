@@ -49,7 +49,7 @@ fn recompile_html() -> Result<()> {
     log::info!("Got {} post(s)", posts.len());
 
     // Clean existing output folder.
-    fs::remove_dir_all("output/").ok();
+    fs::remove_dir_all("docs/").ok();
 
     // Generate the homepage.
 
@@ -57,7 +57,7 @@ fn recompile_html() -> Result<()> {
     for post in posts {
         let post_html = templating::post_page(&post)?;
 
-        let output_path = format!("output/post/{}.html", post.metadata.normalised_title);
+        let output_path = format!("docs/post/{}.html", post.metadata.normalised_title);
         let output_path = Path::new(&output_path);
 
         fs::create_dir_all(&output_path.parent().unwrap())?;
