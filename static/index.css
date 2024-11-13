@@ -1,0 +1,265 @@
+@import url(https://unpkg.com/sanitize.css);
+
+:root {
+    /* Base sizes following Tufte's scale */
+    --font-micro: 0.75rem;     /* 12px - for labels, captions */
+    --font-small: 0.875rem;    /* 14px - for sidenotes */
+    --font-base: 1rem;         /* 16px - body text */
+    --font-medium: 1.25rem;    /* 20px - subheadings */
+    --font-large: 1.5rem;      /* 24px - h3 */
+    --font-xl: 1.875rem;       /* 30px - h2 */
+    --font-xxl: 2.25rem;       /* 36px - h1 */
+
+    /* Vertical rhythm/spacing 
+       Tufte emphasizes generous vertical spacing */
+    --space-base: 1.5rem;      /* 24px - base vertical rhythm */
+    --space-xs: 0.5rem;        /* 8px */
+    --space-sm: 0.75rem;       /* 12px */
+    --space-md: 1.5rem;        /* 24px */
+    --space-lg: 2.25rem;       /* 36px */
+    --space-xl: 3rem;          /* 48px */
+
+    /* Line heights */
+    --leading-tight: 1.2;      /* headings */
+    --leading-normal: 1.5;     /* body text */
+    --leading-loose: 1.75;     /* extended text */
+
+    /* Measure (line length) */
+    --measure-narrow: 45ch;    /* narrow */
+    --measure-base: 65ch;      /* optimal */
+    --measure-wide: 75ch;      /* maximum */
+
+    /* Margins */
+    --margin-width: 20ch;      /* width of margin notes */
+    --gutter: 2rem;            /* space between main text and margin */
+}
+
+body {
+    font-family: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif;
+    font-size: var(--font-base);
+    line-height: var(--leading-normal);
+
+    height: 100%;
+    width: 100%;
+
+    color: #111;
+    margin: 0;
+    padding: 0;
+}
+
+h1.chapter {
+    font-size: var(--font-small);
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+h1 {
+    font-size: var(--font-xxl);
+    line-height: var(--leading-tight);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    font-weight: 400;
+}
+
+h2 {
+    font-size: var(--font-xl);
+    line-height: var(--leading-tight);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-md);
+    font-weight: 400;
+}
+
+h3 {
+    font-size: var(--font-large);
+    line-height: var(--leading-tight);
+    margin-top: var(--space-lg);
+    margin-bottom: var(--space-md);
+    font-weight: 400;
+}
+
+p {
+    margin-top: var(--space-base);
+    margin-bottom: var(--space-base);
+}
+
+main {
+    --main-width: min(100%, 750px);
+    width: var(--main-width);
+    margin: 0 auto 0 25%;
+    padding: 2rem 1rem; /* Breathing room on mobile */
+    counter-reset: sidenote-counter;
+}
+
+@media screen and (max-width: 1455px) {
+    main {
+        margin: 0 auto 0 5%;
+    }
+}
+
+@media screen and (max-width: 820px) {
+    main {
+        margin: 0 auto;
+    }
+}
+
+.margin-number {
+    counter-increment: sidenote-counter;
+}
+
+.margin-number:after {
+    content: counter(sidenote-counter);
+    font-size: var(--font-micro);
+    top: -0.5rem;
+    left: -0.1rem;
+    position: relative;
+}
+
+.figure-number {
+    counter-increment: sidenote-counter;
+}
+
+.figure-number:after {
+    content: counter(sidenote-counter);
+    font-size: var(--font-micro);
+    top: -0.5rem;
+    left: -0.1rem;
+    position: relative;
+}
+
+aside::before {
+    content: counter(sidenote-counter) ": ";
+    font-size: var(--font-small);
+    color: #666;
+    position: relative;
+}
+
+aside {
+    float: right;
+    clear: right;
+    --note-width: calc(var(--main-width) * 0.4);
+    width: var(--note-width);
+    margin-top: 0;
+    margin-right: calc(-1 * var(--note-width) - 10%);
+    margin-left: 0;
+    margin-bottom: var(--space-sm);
+
+    overflow-x: auto;
+
+    -webkit-transform: translateY(calc(-2rem - 18px));
+    transform: translateY(calc(-2rem - 18px));
+
+    font-size: var(--font-small);
+    position: relative;
+    color: #666;
+}
+
+figure::before {
+    content: "Figure " counter(sidenote-counter) ": ";
+    font-size: var(--font-small);
+    color: #666;
+    position: relative;
+}
+
+figure {
+    float: right;
+    clear: right;
+    --figure-width: calc(var(--main-width) * 0.65);
+    width: var(--figure-width);
+    margin-top: 0;
+    margin-right: calc(-1 * var(--figure-width) - 4rem);
+    margin-left: 0;
+    margin-bottom: var(--space-sm);
+
+    overflow-x: auto;
+
+    -webkit-transform: translateY(calc(-2rem - 18px));
+    transform: translateY(calc(-2rem - 18px));
+
+    font-size: var(--font-small);
+    position: relative;
+    color: #666;
+}
+
+@media screen and (max-width: 1730px) {
+    figure {
+        float: none;
+        clear: none;
+        width: 100%;
+
+        -webkit-transform: none;
+        transform: none;
+    }
+    
+    /* Hide number in main text when figures are collapsed */
+    .figure-number:after {
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 1145px) {
+    aside {
+        float: none;
+        clear: none;
+        width: 100%;
+
+        -webkit-transform: none;
+        transform: none;
+    }
+}
+
+
+/* Table styling */
+table {
+    width: 100%;
+    margin: 2rem 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 0.9em;
+}
+
+table th {
+    padding: 0.5rem 0.25rem;
+    border-bottom: 1px solid #333;
+    font-weight: 400;
+    text-align: left;
+}
+
+table td {
+    padding: 0.5rem 0.25rem;
+    border-bottom: 1px solid #ccc;
+    vertical-align: top;
+    word-wrap: break-word;
+}
+
+/* Remove border from last row */
+table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Numerical columns are right-aligned */
+table td.numerical,
+.tufte-table th.numerical {
+    text-align: right;
+}
+
+/* Table caption styling */
+table caption {
+    margin: 0.5rem 0 1.5rem;
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Full-width table variant */
+table.full-width {
+    width: 100%;
+    clear: both;
+}
+
+/* Condensed table variant */
+table.condensed td,
+table.condensed th {
+    padding: 0.25rem 0.25rem;
+}

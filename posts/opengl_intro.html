@@ -1,0 +1,210 @@
+<metadata>
+    <title>OpenGL - Introduction</title>
+    <tags>
+        <tag>
+            General
+        </tag>
+    </tags>
+</metadata>
+
+<contents>
+    <h1 class="chapter">Modern OpenGL - Chapter 1</h1>
+    <h1>Introduction</h1>
+
+    <h2>Preface</h2>
+
+    <p>
+        The intent of this series is to mainly document my own learning process, and act as a reference in the future
+        when I inevitably forget about everything.
+        <span class="margin-number"></span>
+    </p>
+
+    <aside>
+        If you're wondering why everything is slightly left of center, it's because I like to put figures and little notes like these in my margins! On a mobile device, it collapses into the main container (and isn't very useful).
+    </aside>
+
+    <p>
+        I am not a graphics programmer by trade, and there will likely be some mistakes and dodgy code in these posts.
+        The reason I'm still writing it is solely because resources for the later versions of OpenGL (which focus on
+        DSA, Vertex Pulling and other modern concepts) are fairly limited. Most professionals have moved on to Vulkan,
+        but for a hobbyist, learning Vulkan is a huge time investment that doesn't seem particularly enjoyable or
+        worthwhile.
+    </p>
+
+    <p>
+        There are some extremely useful resources that lay out how to use the modern functions introduced in OpenGL 4.1
+        and onwards, but most only cover small aspects of the overall package and don't tend to look at the overall
+        architecture of an OpenGL renderer that utilises modern GPU architecture effectively. I've referenced these
+        sources extensively throughout my posts.
+    </p>
+
+    <p>
+        These posts are more of a narrative exploration of OpenGL 4.6, with the goal being a simple but optimised
+        rendering pipeline that avoids any OpenGL functions that have been replaced with more performant options in
+        recent extensions of the API. Each post focuses on a particular feature or concept, starting with the heavily
+        unoptimised naive approach, and then gradually iterating until we end up with something decent! I try to include
+        benchmarks wherever possible, so that we can get an idea of how each change impacts our renderer.
+    </p>
+
+    <h2>An extremely vague history of OpenGL</h2>
+
+    <p>
+        OpenGL was created in the early 90s, as a standardised interface for interacting with fairly limited graphics
+        hardware. It provided software implementations of features that weren't supported by the underlying hardware,
+        which was pretty great back in the day when GPUs were either extremely simplistic hardware that could only
+        really handle basic rasterisation and texture sampling, or just CPUs with a software rasteriser!
+    </p>
+
+    <p>
+        As time went on, that abstraction began to become a problem. Graphics programmers started to rely on the GPU
+        more, and avoiding expensive data transfer between the GPU and CPU became crucial for performance. GPUs weren't
+        just CPUs with a different name, they had drastically different underlying structures and required a completely
+        different approach.
+    </p>
+
+    <p>
+        This led to the creation of modern graphics APIs, like Vulkan, Metal, DX12, etc. These APIs are much more
+        closely mapped to the underlying GPU architecture, giving developers explicit control over GPU memory.
+    </p>
+
+    <p>
+        However, prior to the creation of Vulkan (which was essentially a direct successor to OpenGL), a lot of new
+        extensions were brought into OpenGL<span class="margin-number"></span>! These extensions didn't exactly give <i>perfect</i> control over the GPU,
+        but they did make it possible to use a lot of the same concepts that would be utilised later on in Vulkan.
+    </p>
+
+    <aside>
+        The <a href="https://www.khronos.org/opengl/wiki/History_of_OpenGL#Summary_of_version_changes">OpenGL wiki</a> details the additions that each version of OpenGL brings into the core library. Most of the functions we'll be relying on were added somewhere between 4.1 and 4.6
+    </aside>
+
+    <p>
+        In order to use these extensions, we have to limit ourselves to the latest version of OpenGL: 4.6. This still
+        has pretty great legacy hardware support, given that it was released in mid 2017, but gives us access to
+        everything we need to write modern OpenGL code.
+    </p>
+
+    <h2>Why not just use Vulkan?</h2>
+
+    <p>
+        Vulkan is considerably lower-level, but also considerably less crufty.
+    </p>
+
+    <p>
+        A good example of the differences is comparing the code for drawing a triangle in Vulkan to drawing a triangle
+        in OpenGL, in C
+    </p>
+
+    <p>
+        <b>vulkan_triangle.c</b> is roughly 1k lines of code, ignoring some comments and window setup.
+        In reality, most of this code is one-time setup of the Vulkan pipeline, but it illustrates just how much control
+        a graphics programmer is given over the underlying hardware.
+    </p>
+
+    <p>
+        <b>opengl_triangle.c</b> is roughly 125 lines of code, again ignoring comments and window setup.
+    </p>
+
+    <h2>The State Machine</h2>
+
+    <p>
+        OpenGL is essentially a giant state machine. State is globally shared in the OpenGL context, and commands are
+        executed sequentially.
+    </p>
+
+    <p>
+        This has performance implications, as binding buffers and shaders is pretty expensive due to the data transfer
+        between the CPU and GPU. It also creates a lot of annoying mistakes where commands executed early on in the
+        program cause problems with later commands. Essentially, it means that one function called with the exact same
+        arguments can result in completely different outcomes depending on the current state.
+    </p>
+
+    <p>
+        With Modern OpenGL, and some well-written utility code, we can manage to avoid a lot of these problems due to
+        the addition of <a href=""
+            http://www.opengl.org/registry/specs/ARB/direct_state_access.txt>ARB_direct_state_access</a> (Direct State
+        Access, or DSA).
+    </p>
+    <p>
+        Before DSA, we would have to <i>bind</i> a buffer to the global context as the <i>current</i> buffer then
+        configuring it using commands that modify the <i>current</i> buffer. Instead, we create a <i>named</i> buffer
+        with a unique ID, and then pass that ID into the new DSA functions. Nothing is bound to the global state, so
+        every command is pure and relies purely on its arguments. Sadly there is still <b>some</b> global state, so
+        things aren't perfect, but it's a considerable step up from the old days!
+    </p>
+
+    <h2>Conclusion</h2>
+
+    <p>
+        OpenGL has a lot of pitfalls due to backwards compatibility and general design issues that can't really be
+        resolved, but if you can avoid the cruft it can fairly performant and easy to use. In terms of hardware
+        compatibility, it supports an older set of GPUs (even with OpenGL 4.6) but has pretty limited support on macOS,
+        as Apple stopped supporting OpenGL beyond 4.1.
+        <span class="figure-number"></span>
+    </p>
+
+    <figure>
+        <table>
+            <caption>OpenGL vs Vulkan - Hardware compatibility</caption>
+            <thead>
+                <tr>
+                    <th>Feature/Aspect</th>
+                    <th>OpenGL 4.6 <b>(2017)</b></th>
+                    <th>Vulkan <b>(2016)</b></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>NVIDIA Support</td>
+                    <td>GeForce 400 series <b>(2010+)</b></td>
+                    <td>GeForce 600 series <b>(2012+)</b></td>
+                </tr>
+                <tr>
+                    <td>AMD Support</td>
+                    <td>HD 7000+ <b>(2012+)</b></td>
+                    <td>HD 7000+ <b>(2012+)</b></td>
+                </tr>
+                <tr>
+                    <td>Intel Support</td>
+                    <td>HD Graphics 4000+ <b>(2012+)*</b></td>
+                    <td>HD Graphics 500 <b>(2015+)</b></td>
+                </tr>
+                <tr>
+                    <td>Windows Support</td>
+                    <td>Windows 7 <b>(2009+)</b><br>Deprecated since Windows 10 <b>(2015)</b></td>
+                    <td>Windows 7 <b>(2009+)</b></td>
+                </tr>
+                <tr>
+                    <td>Linux Support</td>
+                    <td>Mesa 17.0+ <b>(2017+)</b></td>
+                    <td>Mesa 12.0+ <b>(2016+)</b></td>
+                </tr>
+                <tr>
+                    <td>macOS Support</td>
+                    <td>No (Only up to OpenGL 4.1)</td>
+                    <td>Via MoltenVK on macOS 10.11+ <b>(2015+)</b></td>
+                </tr>
+                <tr>
+                    <td>Mobile Support</td>
+                    <td>Very limited</td>
+                    <td>Android 7.0+ <b>(2016+)</b><br>iOS 11+ via MoltenVK <b>(2017+)</b></td>
+                </tr>
+                <tr>
+                    <td>Driver Requirements</td>
+                    <td>Full OpenGL 4.6 capable drivers <b>(2017+)</b><br></td>
+                    <td>Vulkan 1.0+ capable drivers <b>(2016+)</b></td>
+                </tr>
+            </tbody>
+        </table>
+    </figure>
+
+    <p>
+        In general, OpenGL 4.6 is ideal for targeting Windows/Linux systems. If you do need to target hardware from
+        earlier than the 2010s, you can use OpenGL 4.1 and have access to most modern functionality via extensions, but
+        it's generally not necessary.
+    </p>
+
+    <p>
+        In the next post, we'll do some basic setup using Glutin + Winit (Rust equivalent of GLFW) and draw a triangle
+        using DSA.
+    </p>
+</contents>
