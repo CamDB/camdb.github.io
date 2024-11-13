@@ -20,7 +20,7 @@ lazy_static! {
 
     pub static ref BASE_PATH: String = {
         if cfg!(debug_assertions) {
-            env::current_dir().unwrap().to_string_lossy().to_string()
+            env::current_dir().unwrap().join("docs").to_string_lossy().to_string()
         } else {
             "".to_string()
         }

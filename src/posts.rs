@@ -110,7 +110,7 @@ pub fn get_all_posts(path: &Path) -> anyhow::Result<Vec<Post>> {
             }
         }
     } else {
-        return Err(anyhow::anyhow!("Path is not a directory"))
+        return Err(anyhow::anyhow!("Path {:?} is not a directory", path))
     }
 
     Ok(html_files)
